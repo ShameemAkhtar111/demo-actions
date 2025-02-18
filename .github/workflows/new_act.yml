@@ -19,5 +19,5 @@ jobs:
       - name: Upload python artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: new.txt
+          name: dep_files
           path: new.txt
