@@ -14,5 +14,10 @@ jobs:
           dir
           cd src/pydemo
           dir
-      - name: Check python
-        run: python --version
+      - name: Check python file
+        run: python check.py
+      - name: Upload python artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: output-file
+          path: out
