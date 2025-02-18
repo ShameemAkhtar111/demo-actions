@@ -1,0 +1,15 @@
+name: Deploy python
+on:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: list directory
+        run: dir
+      - name: Check python
+        run: python --version
