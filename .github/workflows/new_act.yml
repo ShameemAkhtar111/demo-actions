@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '.github/workflows/demo.yml'
 jobs:
   run-python:
     runs-on: windows-latest
