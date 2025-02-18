@@ -10,6 +10,9 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: list directory
-        run: dir
+        run:  |
+          dir
+          cd src/pydemo
+          dir
       - name: Check python
         run: python --version
