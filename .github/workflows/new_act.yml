@@ -15,12 +15,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12' 
-      - name: list directory
+      - name: Install python modules
         run:  |
-          dir
+          python -m pip install --upgrade pip
+          pip install cx-Freeze
+      - name: Run setup
+        run:  |
           cd src/pydemo
           dir
-          python --version
           python setup.py build
       - name: Upload python artifacts
         uses: actions/upload-artifact@v4
