@@ -23,9 +23,9 @@ jobs:
         run:  |
           cd src/pydemo
           dir
-          python setup.py build
+          python setup.py build -b c:\new_build
       - name: Upload python artifacts
         uses: actions/upload-artifact@v4
         with:
           name: project_1.1.0
-          path: src\build\*
+          path: c:\new_build\*
