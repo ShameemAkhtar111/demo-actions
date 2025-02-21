@@ -21,8 +21,7 @@ jobs:
           cd src/pydemo
           dir
           python --version
-      - name: Check python file
-        run: python src/pydemo/check.py
+          python setup.py build
       - name: Upload python artifacts
         uses: actions/upload-artifact@v4
         with:
