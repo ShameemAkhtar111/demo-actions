@@ -1,0 +1,84 @@
+If you're using the `windows-latest` runner in GitHub Actions, then the paths are expected to be in Windows format (with backslashes `\`). However, there are still a few best practices you can follow to avoid hardcoding paths that might break between your local environment and the CI pipeline.
+
+Here’s how you can handle paths when running on a Windows-based GitHub Actions runner:
+
+### 1. **Use the `github.workspace` Variable for Windows Paths**
+Even though you're using `windows-latest`, it's still better to work with paths that are relative to the workspace directory (where GitHub Actions checks out your code). You can adjust paths based on `github.workspace` dynamically in your workflow.
+
+Here’s an example of how you can adjust the path in `config_py.json`:
+
+#### Workflow File: `.github/workflows/ci.yml`
+```yaml
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set path in config
+        run: |
+          $path = "${{ github.workspace }}\\src"
+          (Get-Content config_py.json) -replace '"path": \["D:\\\\Shameem\\\\dev\\\\01 Starting Project\\\\src"\]', '"path": ["' + $path + '"]' | Set-Content config_py.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run setup.py
+        run: python setup.py install
+```
+
+### Explanation of Workflow Steps:
+- **Checkout repository:** This step checks out your code to the runner.
+- **Set path in config:** This step dynamically replaces the path in `config_py.json` with the `github.workspace` path, which will be compatible with Windows (`C:\path\to\repo`).
+- **Set up Python:** This step sets up Python on the runner.
+- **Install dependencies:** This step installs dependencies using `pip`.
+- **Run setup.py:** Finally, this runs your `setup.py` script.
+
+### 2. **Update Your JSON File with a Relative Path (If Possible)**
+While you might still need absolute paths for some situations, it’s always a good idea to use relative paths whenever possible. This will make your CI/CD pipelines more portable across different environments. In your `config_py.json`, instead of an absolute path like `D:\\Shameem\\dev\\01 Starting Project\\src`, use a relative path like `./src`:
+
+```json
+{
+    "path": [
+        "./src"
+    ]
+}
+```
+
+This ensures that your script works regardless of the machine's absolute path. You can then read this relative path in your `setup.py` file and use it accordingly.
+
+### 3. **Ensure Compatibility in `setup.py`**
+If you need to handle paths dynamically inside your Python code (e.g., `setup.py`), you can use `os.path` or `pathlib` to create platform-independent paths:
+
+```python
+import os
+import json
+
+# Load the JSON configuration
+with open('config_py.json') as f:
+    config = json.load(f)
+
+# Use os.path.join to ensure correct paths across platforms
+base_path = os.getcwd()  # Current working directory
+path_to_use = os.path.join(base_path, *config['path'][0].split('\\'))
+
+# Now use path_to_use as the directory for your setup.py logic
+print(f"Using path: {path_to_use}")
+```
+
+This code dynamically handles paths and ensures compatibility across platforms (Linux, macOS, Windows) by using `os.path.join` and splitting the backslashes for Windows paths. It’s more robust and ensures you don't rely on a specific file system structure.
+
+### Summary
+To handle the issue of paths in GitHub Actions on the `windows-latest` runner:
+1. **Use `github.workspace` to dynamically set paths** and adjust them based on the current runner's environment.
+2. **Prefer relative paths in your `config_py.json`** if your project structure is consistent across local and CI environments.
+3. In your `setup.py` or other Python scripts, use **`os.path` or `pathlib`** to create platform-independent paths, ensuring that your code works on any system.
+
+This should make your CI/CD process smoother and platform-independent, even on Windows runners.
