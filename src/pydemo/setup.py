@@ -52,6 +52,8 @@ for path in config['path']:
                 print(f"{os.path.join(l_path, path)} exists appending")
                 paths.append(os.path.join(l_path, path))
 
+print(f"Paths: {paths}")
+
 build_exe_options = {
     "excludes": excludes,
     # "include_files": include_files,
