@@ -1,5 +1,25 @@
 {
-    "path":[
-        "D:\\Shameem\\dev\\01 Starting Project\\src"
-    ]
+	"path": [
+		"D:\\Shameem\\dev\\01 Starting Project\\src",
+		"C:\\Users\\Shameem Akhtar\\AppData\\Local\\Programs",
+		"Python\\Python312\\lib",
+		"Python\\Python312\\DLLs",
+		"Python\\Python312\\Lib\\site-packages",
+		"Python\\Python312",
+		"pydemo"
+	],
+	"package_dir": [
+		{
+			"target": "User_packages",
+			"source": "Automation_pkg"
+		},
+		{
+			"target": "User_packages",
+			"source": "Components"
+		},
+		{
+			"target": "User_packages",
+			"source": "test"
+		}
+	]
 }

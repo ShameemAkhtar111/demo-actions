@@ -3,6 +3,7 @@ import shutil
 from cx_Freeze import setup, Executable
 import sys
 import os
+import json
 
 if '-b' in sys.argv:
     app_dir = sys.argv[sys.argv.index('-b')+1]
@@ -18,6 +19,8 @@ if os.path.isdir(build_folder):
 
 os.mkdir(build_folder)
 
+with open("config_py.json") as req:
+    config = json.load(req)
 
 def get_installed_packages():
     try:
@@ -35,6 +38,19 @@ try:
         excludes.remove('cx_Logging')
 except Exception as e:
     print(f"Error getting excludes: {e}")
+paths = []
+
+for path in config['path']:
+    print(path)
+    if os.path.isabs(path):
+        print("Is absolute path appending")
+        paths.append(path)
+    else:
+        print("Is not absolute path")
+        for l_path in paths[:]:
+            if os.path.exists(os.path.join(l_path,path)):
+                print(f"{os.path.join(l_path, path)} exists appending")
+                paths.append(os.path.join(l_path, path))
 
 build_exe_options = {
     "excludes": excludes,
